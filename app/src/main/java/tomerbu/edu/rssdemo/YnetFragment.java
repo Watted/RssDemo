@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 /**
@@ -24,7 +25,13 @@ public class YnetFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-       RssHTTPHandler.read("http://www.ynet.co.il/Integration/StoryRss2.xml");
+        RssHTTPHandler.read("http://www.ynet.co.il/Integration/StoryRss2.xml", (rss, e) -> {
+            if (rss != null)
+                Toast.makeText(getActivity(), rss.toString(), Toast.LENGTH_SHORT).show();
+            else if (e != null) {
+                Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
         return inflater.inflate(R.layout.fragment_ynet, container, false);
     }
 

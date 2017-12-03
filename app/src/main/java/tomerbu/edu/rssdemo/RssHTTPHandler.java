@@ -1,6 +1,7 @@
 package tomerbu.edu.rssdemo;
 
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -16,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 /**
@@ -24,11 +26,15 @@ import java.net.URL;
 
 public class RssHTTPHandler {
 
-    public static void read(String address) {
+    //Observer
+    public interface RssResultListener{
+        void onResult(@Nullable ArrayList<Rss> result, @Nullable Exception e);
+    }
+    public static void read(String address, RssResultListener listener) {
         //get a reference to the Main Thread:
         //the handler helps us get a reference to the current thread.
         //in order to update the ui, let's get a reference of the main thread as well
-        android.os.Handler main = new android.os.Handler();
+        final android.os.Handler main = new android.os.Handler();
         new Thread(() -> {
             try {
                 URL url = new URL(address);
@@ -37,15 +43,27 @@ public class RssHTTPHandler {
                 String xml = read(in, "windows-1255");
                 Document document = Jsoup.parse(xml);
                 Elements itemsArray = document.getElementsByTag("item");
+                ArrayList<Rss> rss = new ArrayList<>();
                 for (Element e : itemsArray) {
                     //there is only one title element per item.
                     Element title = e.getElementsByTag("title").first();
-                    String titleValue = title.val();
-                    System.out.println(titleValue);
-                    Log.d("Rss", titleValue);
+                    String titleValue = title.text();
+
+                    Element desc = e.getElementsByTag("description").first();
+                    Document descDoc = Jsoup.parse(desc.text());
+                    String link = descDoc.getElementsByTag("a").first().attr("href");
+                    String img = descDoc.getElementsByTag("img").first().attr("src");
+                    String summary = descDoc.text();
+                    rss.add(new Rss(titleValue, img, summary));
                 }
+                //if we got so far , report the result to the listener. best to do so on the ui thread.
+                main.post(/*code that runs on the main thread*/()->{
+                    listener.onResult(rss, null);
+                });
             } catch (Exception e) {//TODO: Handle Errors!
-                e.printStackTrace();
+                main.post(/*code that runs on the main thread*/()->{
+                    listener.onResult(null, e);
+                });
             }
         }).start();
     }
