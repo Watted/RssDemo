@@ -23,6 +23,8 @@ public class YnetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+       RssHTTPHandler.read("http://www.ynet.co.il/Integration/StoryRss2.xml");
         return inflater.inflate(R.layout.fragment_ynet, container, false);
     }
 
