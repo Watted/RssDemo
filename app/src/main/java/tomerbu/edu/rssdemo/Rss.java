@@ -8,16 +8,17 @@ public class Rss {
     String title;
     String imageUrl;
     String summary;
+    String link;
 
-    //ctor:
-    public Rss(String title, String imageUrl, String summary) {
+    //also default ctor may be useful:
+    public Rss(String title, String imageUrl, String summary, String link) {
         this.title = title;
         this.imageUrl = imageUrl;
         this.summary = summary;
+        this.link = link;
     }
-    //also default ctor may be useful:
-    public Rss() {
-    }
+
+    public Rss() {}
 
     //toString()...
     @Override
@@ -26,6 +27,7 @@ public class Rss {
                 "title='" + title + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", summary='" + summary + '\'' +
+                ", link='" + link + '\'' +
                 '}';
     }
 }

@@ -54,7 +54,7 @@ public class RssHTTPHandler {
                     String link = descDoc.getElementsByTag("a").first().attr("href");
                     String img = descDoc.getElementsByTag("img").first().attr("src");
                     String summary = descDoc.text();
-                    rss.add(new Rss(titleValue, img, summary));
+                    rss.add(new Rss(titleValue, img, summary, link));
                 }
                 //if we got so far , report the result to the listener. best to do so on the ui thread.
                 main.post(/*code that runs on the main thread*/()->{
