@@ -4,12 +4,11 @@
     android:layout_height="match_parent"
     tools:context="tomerbu.edu.rssdemo.YnetFragment">
 
-    <TextView
-        android:id="@+id/tvYnet"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvYnet"
         android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Ynet"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
 
         />

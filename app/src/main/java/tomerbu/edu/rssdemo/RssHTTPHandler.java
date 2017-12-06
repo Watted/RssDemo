@@ -1,6 +1,7 @@
 package tomerbu.edu.rssdemo;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -28,8 +29,10 @@ public class RssHTTPHandler {
 
     //Observer
     public interface RssResultListener{
-        void onResult(@Nullable ArrayList<Rss> result, @Nullable Exception e);
+        void onResult(@NonNull ArrayList<Rss> result);
+        void onError(@NonNull Exception e);
     }
+
     public static void read(String address, RssResultListener listener) {
         //get a reference to the Main Thread:
         //the handler helps us get a reference to the current thread.
@@ -51,18 +54,24 @@ public class RssHTTPHandler {
 
                     Element desc = e.getElementsByTag("description").first();
                     Document descDoc = Jsoup.parse(desc.text());
-                    String link = descDoc.getElementsByTag("a").first().attr("href");
-                    String img = descDoc.getElementsByTag("img").first().attr("src");
+                    String link = "";
+                    String img = "";
+                    try {
+                        link = descDoc.getElementsByTag("a").first().attr("href");
+                        img = descDoc.getElementsByTag("img").first().attr("src");
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
                     String summary = descDoc.text();
                     rss.add(new Rss(titleValue, img, summary, link));
                 }
                 //if we got so far , report the result to the listener. best to do so on the ui thread.
                 main.post(/*code that runs on the main thread*/()->{
-                    listener.onResult(rss, null);
+                    listener.onResult(rss);
                 });
             } catch (Exception e) {//TODO: Handle Errors!
                 main.post(/*code that runs on the main thread*/()->{
-                    listener.onResult(null, e);
+                    listener.onError(e);
                 });
             }
         }).start();
