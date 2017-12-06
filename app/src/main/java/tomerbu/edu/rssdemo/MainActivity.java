@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity
         //set this as onItemListener...
         navigationView.setNavigationItemSelectedListener(this);
 
-        changeFrame(new YnetFragment());
+        changeFrame(RssFragment.newInstance("http://www.ynet.co.il/Integration/StoryRss2.xml"));
         navigationView.setCheckedItem(R.id.nav_ynet);
     }
 
@@ -77,13 +77,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_ynet:
-                changeFrame(new YnetFragment());
+                changeFrame(RssFragment.newInstance("http://www.ynet.co.il/Integration/StoryRss2.xml"));
                 break;
             case R.id.nav_walla:
-               changeFrame(new WallaFragment());
+                changeFrame(RssFragment.newInstance("http://rss.walla.co.il/?w=/1/0/12/@rss.e"));
                 break;
             case R.id.nav_sports:
-                changeFrame(new SportsFragment());
+                changeFrame(RssFragment.newInstance("http://www.one.co.il/cat/coop/xml/rss/newsfeed.aspx"));
                 break;
                 //the upper part is used for fragment transactions.
 //                Two parts to the nav, the lower is used for intents.

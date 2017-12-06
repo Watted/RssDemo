@@ -42,6 +42,7 @@ public class RssHTTPHandler {
             try {
                 URL url = new URL(address);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setRequestProperty("user-agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1");
                 InputStream in = con.getInputStream();
                 String xml = read(in, "windows-1255");
                 Document document = Jsoup.parse(xml);
@@ -51,7 +52,11 @@ public class RssHTTPHandler {
                     //there is only one title element per item.
                     Element title = e.getElementsByTag("title").first();
                     String titleValue = title.text();
-
+                    if (titleValue.startsWith("<![CDATA")){
+                        try {
+                            titleValue = titleValue.substring(9, titleValue.length() - 3);
+                        }catch (Exception e1){e1.printStackTrace();}
+                    }
                     Element desc = e.getElementsByTag("description").first();
                     Document descDoc = Jsoup.parse(desc.text());
                     String link = "";

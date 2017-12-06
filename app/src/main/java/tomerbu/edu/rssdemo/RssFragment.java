@@ -18,14 +18,21 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class YnetFragment extends Fragment implements RssHTTPHandler.RssResultListener {
+public class RssFragment extends Fragment implements RssHTTPHandler.RssResultListener {
+    String url;
     RecyclerView rvRss;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ynet, container, false);
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @Deprecated //Never ever use this one, use the factory method instead.
+    public RssFragment() {}
+
+    //Factory method solves the constructor issue.
+    public static RssFragment newInstance(String url) {
+        Bundle args = new Bundle();
+        args.putString("url", url);
+        RssFragment fragment = new RssFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -33,8 +40,15 @@ public class YnetFragment extends Fragment implements RssHTTPHandler.RssResultLi
         super.onViewCreated(v, savedInstanceState);
         rvRss = v.findViewById(R.id.rvYnet);
 
-        String url = "http://www.ynet.co.il/Integration/StoryRss2.xml";
+        this.url = getArguments().getString("url");
         RssHTTPHandler.read(url, this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_ynet, container, false);
     }
 
 
